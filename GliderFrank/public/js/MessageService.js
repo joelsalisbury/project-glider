@@ -21,17 +21,15 @@ class MessageService {
   	
   	for (var i = 0; i <= this.messages.length; i++)
   		var message = this.messages.pop();
-  		console.log("======MESSAGING SERVICES SAYS: " + message.msg);
 	  	switch (message.msg) {
 	  		case "phase-changed":
 	  			console.log(message.values);
+  				if(message.values.sendRemote) {
+					this.updateRemoteValue("phase", message.values.phase);
+				}
 	  		break;
 	  	}
 
-
-	if(message.values.sendRemote) {
-		this.sendRemote(i);
-	}
   }
 
   //set up an object to listen for a certain message to be broadcast;
@@ -42,13 +40,17 @@ class MessageService {
   sendRemote(message){
   	this.remoteMessenger.sendMessage(message);
   }
+
+  updateRemoteValue(key, value) {
+  	this.remoteMessenger.updateValue(key,value);
+  }
 }
 
 class RemoteMessenger {
 	constructor(provider, config) {
 		switch(provider) {
 			case "firebase":
-				  //firebase.initializeApp(config);
+				  firebase.initializeApp(config);
 			break;
 		}
 	}
@@ -59,11 +61,16 @@ class RemoteMessenger {
 
 	sendMessage(message) {
 		// this will send the message to the "message" remote bucket.
-		console.log("==== REMOTE HANDLER IS SENDING MESSAGE ====")
+		console.log("==== REMOTE HANDLER IS SENDING MESSAGE " + message + "====")
 	}
 
 	updateValue(key, value) {
 		// this will update any remote values that need to be updated. 
 		// possibly the most frequently used method
+
+		firebase.database().ref().child(key).set(value);
+	    
 	}
 }
+
+MB = new MessageService({});

@@ -50,9 +50,10 @@ class Place {
     this.isActive = false;
     let hasChild = this.domWrapper.parentNode == this.parent;
       if (hasChild) {
-            console.log("DEACTIVATING");
+        
+        console.log("DEACTIVATING");
 
-        console.log("deactivating");
+        console.log(this.parent);
         this.parent.removeChild(this.domWrapper);
       }
   }
