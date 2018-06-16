@@ -29,10 +29,10 @@ $activeParts = $FPInfo['activeParts'];
 
 echo "<Parts>";
 foreach($activeParts as $part) {
-    $file = "../parts/".$part."/index.html";
-    if(file_exists($file)) {
-      echo file_get_contents($file);
-    }
+  $file = "../parts/".$part."/index.html";
+  if(file_exists($file)) {
+    echo file_get_contents($file);
+  }
 }
 
 echo "</Parts>";
@@ -43,21 +43,19 @@ echo "</Parts>";
 
 include 'FlightPlan.html';
 
+$placePath = "../places/".$placeId.".html";
 
+include $placePath;
 
 ?>
 
-<div class="place place-fluid" id="place-mobile"></div>
+
 </body>
 
 <script src="../js/vendor/modernizr-3.6.0.min.js"></script>
 
 <script src="../js/plugins.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
-
-
-
-
 
 <script src="../js/MessageService.js"></script>
 <script src="../js/GliderPart.js"></script>
@@ -66,21 +64,21 @@ include 'FlightPlan.html';
 
 <script src="../js/FlightPlan.js"></script>
 <script>
+
+  // Initialize Flight Plan for the custom Place
   let places = [];
+
+  // Assumes one
   let parent = document.querySelector(".place");
   let place3 = new Place("<?php echo $placeId; ?>", {parent:parent});
   places.push(place3);
 
   const remotePhase = firebase.database().ref().child('phase');
 
-
-
-  //var flightPlan = new FlightPlan(places, {control:false, startingPhaseIndex: remotePhase});
-
-  // should be replaced with subscribe
-   remotePhase.on('value', function(snapshot) {
+  // should be replaced with subscribe or similar MB func
+  remotePhase.on('value', function(snapshot) {
       myphase = snapshot.val();
       flightPlan = new FlightPlan(places, {control:false, startingPhaseIndex: myphase});
-    });
+  });
 
 </script>
